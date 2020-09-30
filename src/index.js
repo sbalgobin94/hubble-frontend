@@ -81,7 +81,7 @@ postForm.addEventListener("submit", (evt) => {
       body: JSON.stringify({
         title: titleInput.value,
         description: descriptionInput.value,
-        image_url: imageInput.value
+        image_url: imageInput.value,
         user_id: 1
       })
     })
