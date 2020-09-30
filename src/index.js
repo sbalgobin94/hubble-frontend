@@ -3,6 +3,7 @@ const postFormContainer = document.querySelector(".container");
 postFormContainer.style.display = "none";
 const postsCollection = document.querySelector("div#posts")
 const postForm = document.querySelector(".add-post-form")
+let globalPost = {}
 
 
 fetch("http://localhost:3000/posts")
@@ -15,10 +16,12 @@ fetch("http://localhost:3000/posts")
     })
 
 
-
 let turnPostToHTML = (post) => {
+    globalPost = post
+
     let postDiv = document.createElement("div")
     postDiv.classList.add("card")
+    postDiv.id = "singlepost"
     
     let postTitle = document.createElement("h5")
     postTitle.innerText = post.title
@@ -48,7 +51,7 @@ let turnPostToHTML = (post) => {
     postsCollection.innerHTML += "<br>"
 
 
-   let theDeleteButton = postDiv.querySelector("button.del-btn")
+   let theDeleteButton = document.querySelector("button.del-btn")
 
    theDeleteButton.addEventListener("click", (evt) => {
 
@@ -57,8 +60,7 @@ let turnPostToHTML = (post) => {
     })
         .then(res => res.json())
         .then((emptyObject) => {
-            // emptyObject -> {}
-            postDiv.remove()
+          postDiv.remove()
         })
 
 })
@@ -66,9 +68,9 @@ let turnPostToHTML = (post) => {
 
 postForm.addEventListener("submit", (evt) => {
     evt.preventDefault()
-    let imageInput = document.querySelector("#image-input")
-    let titleInput = document.querySelector("#title-input")
-    let descriptionInput = document.querySelector("#description-input")
+    let imageInput = evt.target.image
+    let titleInput = evt.target.title
+    let descriptionInput = evt.target.description
     
     fetch("http://localhost:3000/posts", {
       method: "POST",
@@ -80,10 +82,12 @@ postForm.addEventListener("submit", (evt) => {
         title: titleInput.value,
         description: descriptionInput.value,
         image_url: imageInput.value
+        user_id: 1
       })
     })
     .then(res => res.json())
     .then((createdPost) => {
+      console.log(createdPost)
       turnPostToHTML(createdPost);
       evt.target.reset()
     })
