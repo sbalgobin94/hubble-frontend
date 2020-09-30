@@ -3,7 +3,7 @@ const postsCollection = document.querySelector("div#posts")
 const postForm = document.querySelector(".add-post-form")
 
 
-fetch('http://localhost:3000/api/v1/posts')
+fetch('http://localhost:3000/posts')
 .then(res => res.json())
 .then((posts) => {
     renderPosts(posts)
@@ -39,20 +39,20 @@ let turnPostToHTML = (createdPost) => {
 
 postForm.addEventListener("submit", (evt) => {
     evt.preventDefault()
-    let theImage = evt.target.image_url.value
-    let theTitle = evt.target.title.value
-    let theDescription = evt.target.description.value
+    let imageInput = document.querySelector("#image-input")
+    let titleInput = document.querySelector("#title-input")
+    let descriptionInput = document.querySelector("#description-input")
     
-    fetch("http://localhost:3000/api/v1/posts", {
+    fetch("http://localhost:3000/posts", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json"
       },
       body: JSON.stringify({
-        title: theTitle,
-        description: theDescription,
-        image_url: theImage
+        title: titleInput.value,
+        description: descriptionInput.value,
+        image_url: imageInput.value
       })
     })
     .then(res => res.json())
