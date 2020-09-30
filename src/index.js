@@ -17,7 +17,6 @@ fetch("http://localhost:3000/posts")
 
 
 let turnPostToHTML = (post) => {
-    globalPost = post
 
     let postDiv = document.createElement("div")
     postDiv.classList.add("card")
@@ -40,6 +39,7 @@ let turnPostToHTML = (post) => {
     let likeButton = document.createElement("button")
     likeButton.classList.add("like-btn")
     likeButton.innerText = "♥"
+    likeButton.innerHTML += '<br>'
 
     let deleteButton = document.createElement("button")
     deleteButton.classList.add("del-btn")
@@ -51,15 +51,16 @@ let turnPostToHTML = (post) => {
     postsCollection.innerHTML += "<br>"
 
 
-   let theDeleteButton = document.querySelector("button.del-btn")
+   deleteButton.addEventListener("click", (evt) => {
 
-   theDeleteButton.addEventListener("click", (evt) => {
+    console.log("delete button clicked")
 
     fetch(`http://localhost:3000/posts/${post.id}`, {
         method: "DELETE"
     })
         .then(res => res.json())
-        .then((emptyObject) => {
+        .then(() => {
+          console.log(postDiv)
           postDiv.remove()
         })
 
