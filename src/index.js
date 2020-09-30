@@ -36,9 +36,12 @@ let turnPostToHTML = (post) => {
     let postDesc= document.createElement("p")
     postDesc.innerText = post.description
 
+    let postLikesP = document.createElement("p")
+    postLikesP.innerText = `${post.likes} Upvotes`
+
     let likeButton = document.createElement("button")
     likeButton.classList.add("like-btn")
-    likeButton.innerText = "♥"
+    likeButton.innerText = "⬆️"
     
 
     let deleteButton = document.createElement("button")
@@ -48,7 +51,7 @@ let turnPostToHTML = (post) => {
     let br = document.createElement("br")
 
 
-    postDiv.append(postTitle, postImg, postDesc, likeButton, deleteButton)
+    postDiv.append(postTitle, postImg, postDesc, postLikesP, likeButton, deleteButton)
     postsCollection.append(postDiv)
     postsCollection.append(br)
     
@@ -68,7 +71,29 @@ let turnPostToHTML = (post) => {
         })
 
 })
-  }
+
+likeButton.addEventListener("click", (evt) => {
+  let theNewLikes = post.likes + 1
+  
+  fetch(`http:/localhost:3000/posts/${post.id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json"
+    },
+    body: JSON.stringify({
+      likes: theNewLikes
+    })
+  })
+    .then(res => res.json())
+    .then((updatedPost) => {
+     postLikesP.innerText = `${updatedPost.likes} Upvotes`
+
+      post.likes = updatedPost.likes
+    })
+
+  })
+}
 
 postForm.addEventListener("submit", (evt) => {
     evt.preventDefault()
@@ -86,7 +111,9 @@ postForm.addEventListener("submit", (evt) => {
         title: titleInput.value,
         description: descriptionInput.value,
         image_url: imageInput.value,
-        user_id: 1
+        user_id: 1,
+        likes: 0
+
       })
     })
     .then(res => res.json())

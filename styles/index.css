@@ -19,3 +19,12 @@ div {text-align: center;}
   margin-right: auto;
   width: 50%;
 }
+
+.add-post-form {
+  background-color: whitesmoke;
+  margin-top: 10vh;
+  margin-bottom: 10vh;
+  width: 500px;
+  margin: 20vh auto 0;
+  padding: 20px;
+}
