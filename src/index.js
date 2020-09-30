@@ -39,16 +39,19 @@ let turnPostToHTML = (post) => {
     let likeButton = document.createElement("button")
     likeButton.classList.add("like-btn")
     likeButton.innerText = "♥"
-    likeButton.innerHTML += '<br>'
+    
 
     let deleteButton = document.createElement("button")
     deleteButton.classList.add("del-btn")
     deleteButton.innerText = "Delete Post"
 
+    let br = document.createElement("br")
+
 
     postDiv.append(postTitle, postImg, postDesc, likeButton, deleteButton)
     postsCollection.append(postDiv)
-    postsCollection.innerHTML += "<br>"
+    postsCollection.append(br)
+    
 
 
    deleteButton.addEventListener("click", (evt) => {
