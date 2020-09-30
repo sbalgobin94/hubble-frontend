@@ -1,40 +1,67 @@
 let addPost = false;
+const postFormContainer = document.querySelector(".container");
+postFormContainer.style.display = "none";
 const postsCollection = document.querySelector("div#posts")
 const postForm = document.querySelector(".add-post-form")
 
 
-fetch('http://localhost:3000/posts')
-.then(res => res.json())
-.then((posts) => {
-    renderPosts(posts)
+fetch("http://localhost:3000/posts")
+    .then(res => res.json())
+    .then((postsArr) => {
+        postsArr.forEach((post) => {
+           turnPostToHTML(post);
+        })
+
+    })
+
+
+
+let turnPostToHTML = (post) => {
+    let postDiv = document.createElement("div")
+    postDiv.classList.add("card")
+    
+    let postTitle = document.createElement("h5")
+    postTitle.innerText = post.title
+
+    let postImg = document.createElement("img")
+    postImg.src = post.image_url
+    postImg.alt = "image not found"
+    postImg.classList.add("post-img")
+    postImg.classList.add("center")
+    postImg.style.height = "35rem"
+    postImg.style.width = "30rem"
+
+    let postDesc= document.createElement("p")
+    postDesc.innerText = post.description
+
+    let likeButton = document.createElement("button")
+    likeButton.classList.add("like-btn")
+    likeButton.innerText = "♥"
+
+    let deleteButton = document.createElement("button")
+    deleteButton.classList.add("del-btn")
+    deleteButton.innerText = "Delete Post"
+
+
+    postDiv.append(postTitle, postImg, postDesc, likeButton, deleteButton)
+    postsCollection.append(postDiv)
+    postsCollection.innerHTML += "<br>"
+
+
+   let theDeleteButton = postDiv.querySelector("button.del-btn")
+
+   theDeleteButton.addEventListener("click", (evt) => {
+
+    fetch(`http://localhost:3000/posts/${post.id}`, {
+        method: "DELETE"
+    })
+        .then(res => res.json())
+        .then((emptyObject) => {
+            // emptyObject -> {}
+            postDiv.remove()
+        })
+
 })
-
-
-let renderPosts = (posts) => {
-  postsCollection.innerHTML = ""
-  posts.forEach(function (post) {
-    postsCollection.innerHTML += `
-   <center><div class="card" data-id=${post.title}>
-        <h6>${post.title}</h6>
-        <center><img style="height: 30rem; width: 25rem;" src="${post.image_url}" class="post-picture" /></center>
-        <p>${post.description}</p>
-        <button class="like-btn">♥</button>
-   </div></center>
-   <br>
-  `
-  })
-}
-
-let turnPostToHTML = (createdPost) => {
-    postsCollection.innerHTML += `
-    <center><div class="card" data-id=${createdPost.title}>
-        <h6>${createdPost.title}</h6>
-         <center><img style="height: 30rem; width: 25rem;" src="${createdPost.image_url}" class="post-picture" /></center>
-         <p>${createdPost.description}</p>
-         <button class="like-btn">♥</button>
-    </div></center>
-    <br>
-   `
   }
 
 postForm.addEventListener("submit", (evt) => {
@@ -71,6 +98,7 @@ postForm.addEventListener("submit", (evt) => {
     addBtn.addEventListener("click", () => {
       // hide & seek with the form
       addPost = !addPost;
+      console.log(addPost)
       if (addPost) {
         postFormContainer.style.display = "block";
       } else {
