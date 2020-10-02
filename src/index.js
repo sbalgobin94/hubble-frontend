@@ -1,9 +1,6 @@
 let addPost = false;
-// let addComment = false;
-// commentFormContainer.style.display = "none"
-// const commentFormContainer = document.querySelector(".comment-container")
-const postFormContainer = document.querySelector(".container");
-postFormContainer.style.display = "none";
+const postFormContainer = document.querySelector(".postform")
+postFormContainer.style.display = "none"
 const postsCollection = document.querySelector("div#posts")
 const postForm = document.querySelector(".add-post-form")
 let globalPost = {}
@@ -44,16 +41,12 @@ let turnPostToHTML = (post) => {
     postDesc.innerText = post.description
 
     let postLikesP = document.createElement("p")
+    postLikesP.classList.add("upvote")
     postLikesP.innerText = `${post.likes} Upvotes`
 
     let likeButton = document.createElement("button")
     likeButton.classList.add("like-btn")
     likeButton.innerText = "⬆️"
-
-    let commentButton = document.createElement("button")
-    commentButton.classList.add("comment-button")
-    commentButton.innerText = "Comment"
-    
 
     let deleteButton = document.createElement("button")
     deleteButton.classList.add("del-btn")
@@ -64,6 +57,21 @@ let turnPostToHTML = (post) => {
     let commentDiv = document.createElement("div")
     commentDiv.className = "comment-div"
 
+    let commentForm = document.createElement("form")
+    commentForm.id = "new-comment-form" 
+    let commentLabel = document.createElement("label")
+    commentLabel.innerText = "Comment: "
+    let commentInput = document.createElement("input")
+    commentInput.type = "text"
+    commentInput.name = "content"
+    commentInput.id = "comment-input"
+    let submitComment = document.createElement("input")
+    submitComment.type = "submit"
+    submitComment.value = "submit"
+    submitComment.id = "button-button"
+
+    commentForm.append(commentLabel, commentInput, submitComment)
+
     post.comments.forEach(function(comment) {
       let commentP = document.createElement("p")
       commentP.className = "comment-p"
@@ -72,12 +80,42 @@ let turnPostToHTML = (post) => {
     })
 
 
-    postDiv.append(postTitle, postImg, postDesc, postLikesP, likeButton, commentButton, deleteButton, commentDiv)
+    postDiv.append(postTitle, postImg, postDesc, postLikesP, likeButton, deleteButton, commentForm, commentDiv)
 
 
 
     postsCollection.append(postDiv)
     postsCollection.append(br)
+
+  commentForm.addEventListener("submit", (evt) => {
+    evt.preventDefault()
+    let contentInput = evt.target.content
+    
+    fetch("http://localhost:3000/comments", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+      body: JSON.stringify({
+        content: contentInput.value,
+        user_id: 1,
+        post_id: post.id
+
+      })
+    })
+    .then(res => res.json())
+    .then((createdComment) => {
+      console.log(createdComment)
+      let commentP = document.createElement("p")
+      commentP.className = "comment-p"
+      commentP.innerText = `${createdComment.user.username} : ${createdComment.content}`
+      commentDiv.append(commentP)
+      
+      evt.target.reset()
+    })
+    
+  })
     
 
 
@@ -153,7 +191,7 @@ postForm.addEventListener("submit", (evt) => {
 
   document.addEventListener("DOMContentLoaded", () => {
     const addBtn = document.querySelector("#new-post-btn");
-    const postFormContainer = document.querySelector(".container");
+    const postFormContainer = document.querySelector("postform");
     addBtn.addEventListener("click", () => {
       // hide & seek with the form
       addPost = !addPost;

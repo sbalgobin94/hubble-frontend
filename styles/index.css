@@ -38,5 +38,10 @@ div {
 }
 
 .comment-div {
-  background-color: grey
+  background-color: gray
+}
+
+.upvote {
+  color: navy
+  
 }
