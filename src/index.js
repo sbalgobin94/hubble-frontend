@@ -1,4 +1,7 @@
 let addPost = false;
+// let addComment = false;
+// commentFormContainer.style.display = "none"
+// const commentFormContainer = document.querySelector(".comment-container")
 const postFormContainer = document.querySelector(".container");
 postFormContainer.style.display = "none";
 const postsCollection = document.querySelector("div#posts")
@@ -21,6 +24,10 @@ let turnPostToHTML = (post) => {
     let postDiv = document.createElement("div")
     postDiv.classList.add("card")
     postDiv.id = "singlepost"
+
+    // let postUser = document.createElement("h3")
+    // postUser.innerText = post.user_name
+
     
     let postTitle = document.createElement("h5")
     postTitle.innerText = post.title
@@ -42,6 +49,10 @@ let turnPostToHTML = (post) => {
     let likeButton = document.createElement("button")
     likeButton.classList.add("like-btn")
     likeButton.innerText = "⬆️"
+
+    let commentButton = document.createElement("button")
+    commentButton.classList.add("comment-button")
+    commentButton.innerText = "Comment"
     
 
     let deleteButton = document.createElement("button")
@@ -50,8 +61,21 @@ let turnPostToHTML = (post) => {
 
     let br = document.createElement("br")
 
+    let commentDiv = document.createElement("div")
+    commentDiv.className = "comment-div"
 
-    postDiv.append(postTitle, postImg, postDesc, postLikesP, likeButton, deleteButton)
+    post.comments.forEach(function(comment) {
+      let commentP = document.createElement("p")
+      commentP.className = "comment-p"
+      commentP.innerText = `${comment.user} : ${comment.content}`
+      commentDiv.append(commentP)
+    })
+
+
+    postDiv.append(postTitle, postImg, postDesc, postLikesP, likeButton, commentButton, deleteButton, commentDiv)
+
+
+
     postsCollection.append(postDiv)
     postsCollection.append(br)
     
@@ -141,3 +165,4 @@ postForm.addEventListener("submit", (evt) => {
       }
     });
   });
+

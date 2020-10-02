@@ -9,9 +9,9 @@ body {
     -o-background-size: cover;
   }
 
-h5 {text-align: center;}
-p {text-align: center;}
-div {text-align: center;}
+
+/* p {text-align: center;} */
+div.container {text-align: center;}
 
 .center {
   display: block;
@@ -27,4 +27,16 @@ div {text-align: center;}
   width: 500px;
   margin: 20vh auto 0;
   padding: 20px;
+}
+
+div {
+  opacity: .95;
+}
+
+.comment-p {
+  color: white
+}
+
+.comment-div {
+  background-color: grey
 }
